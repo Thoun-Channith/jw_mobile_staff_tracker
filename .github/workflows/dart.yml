@@ -1,0 +1,35 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      # Checkout repo
+      - uses: actions/checkout@v4
+
+      # Setup Flutter
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.3' # set your Flutter version
+
+      # Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Build IPA (no signing)
+      - name: Build iOS (IPA)
+        run: |
+          flutter build ipa --no-codesign
+
+      # Upload IPA as artifact
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: build/ios/ipa/*.ipa
