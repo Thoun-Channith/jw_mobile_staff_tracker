@@ -14,18 +14,24 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
-          flutter-version: '3.19.5' # Specify exact version for consistency
+
+      - name: Setup CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod setup
 
       - run: flutter pub get
 
-      # Clean and regenerate iOS files
+      # Clean everything
       - run: flutter clean
-      - run: rm -rf ios/Pods ios/Podfile.lock
-      
-      # Let Flutter handle CocoaPods installation
-      - run: flutter precache --ios
-      
-      # Build with Flutter managing the iOS dependencies
+      - run: rm -rf ios/Pods ios/Podfile.lock ios/Runner.xcworkspace
+
+      # Install pods with proper Flutter configuration
+      - run: pod install --repo-update --verbose
+        working-directory: ios
+        env:
+          COCOAPODS_DISABLE_STATS: true
+
       - run: flutter build ios --release --no-codesign
 
       - run: mkdir Payload
