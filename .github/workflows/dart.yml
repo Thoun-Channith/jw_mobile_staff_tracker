@@ -1,54 +1,41 @@
-name: iOS-ipa-build
+name: Build iOS ipa
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
 
 jobs:
-  build-ios:
-    name: 🎉 iOS Build
-    runs-on: macos-latest
+  build:
+    name: Build iOS App
+    runs-on: macos-latest # Use a macOS runner for iOS builds
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v4 # Get your project code
 
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          architecture: x64
-
-      - name: Setup CocoaPods
+      - name: Create ExportOptions.plist
         run: |
-          sudo gem install cocoapods
-          pod setup
+          cat <<EOF > ios/ExportOptions.plist
+          ${{ secrets.EXPORT_OPTION_PLIST }}
+          EOF
+        # This step dynamically creates the ExportOptions.plist from a secret,
+        # which should contain the content of your ExportOptions.plist file.
 
-      - run: flutter pub get
-
-      # Clean everything
-      - run: flutter clean
-      - run: rm -rf ios/Pods ios/Podfile.lock ios/Runner.xcworkspace
-
-      # Install pods with proper Flutter configuration
-      - run: pod install --repo-update --verbose
-        working-directory: ios
-        env:
-          COCOAPODS_DISABLE_STATS: true
-
-      - run: flutter build ios --release --no-codesign
-
-      - run: mkdir Payload
-        working-directory: build/ios/iphoneos
-
-      - run: mv Runner.app/ Payload
-        working-directory: build/ios/iphoneos
-
-      - name: Zip output
-        run: zip -qq -r -9 FlutterIpaExport.ipa Payload
-        working-directory: build/ios/iphoneos
-
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
+      - name: Build iOS App
+        uses: cedvdb/action-flutter-build-ios@v1 # Example action for Flutter, adjust for native iOS
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/ios/iphoneos/FlutterIpaExport.ipa
-          tag: v1.0
-          overwrite: true
-          body: "This is first release"
+          build-cmd: flutter build ipa --export-options-plist=ios/ExportOptions.plist # Example build command
+          certificate-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          certificate-password: ${{ secrets.P12_PASSWORD }}
+          provisioning-profile-base64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+        # This action handles signing and building the IPA.
+        # You would use a different action or custom script for native iOS projects.
+        # For native iOS, consider actions like 'Build iOS Action' from the GitHub Marketplace.
+
+      - name: Upload IPA as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-IPA
+          path: build/ios/ipa/*.ipa # Adjust path based on your build output
