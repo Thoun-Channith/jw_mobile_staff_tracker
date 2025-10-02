@@ -13,7 +13,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0' # match your local flutter version
+          flutter-version: '3.35.3' # match your local flutter version
           channel: 'stable'
           architecture: x64
 
