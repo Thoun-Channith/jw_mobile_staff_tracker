@@ -9,7 +9,6 @@ import 'package:staff_tracking_app/app/models/activity_log_model.dart';
 import 'package:staff_tracking_app/app/routes/app_pages.dart';
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:collection/collection.dart';
 
 class HomeController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
