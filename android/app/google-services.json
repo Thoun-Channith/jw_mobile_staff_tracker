@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "984352294269",
+    "project_id": "jw-staff-tracking-app",
+    "storage_bucket": "jw-staff-tracking-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984352294269:android:d8422ad524b0aeb4cc7814",
+        "android_client_info": {
+          "package_name": "com.example.jw_mobile_staff_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKbQLDe5Uo5f1AdpXZhzoVO12424F8yxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
