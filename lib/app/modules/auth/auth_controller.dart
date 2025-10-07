@@ -71,6 +71,7 @@ class AuthController extends GetxController {
             'role': 'staff',
             'employeeId': 'N/A',
             'position': 'N/A',
+            'accountEnabled': true,
           });
           await _initializeNotifications(user.uid);
         } on FirebaseException catch (e) {
