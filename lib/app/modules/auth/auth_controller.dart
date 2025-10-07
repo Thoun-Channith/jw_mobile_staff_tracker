@@ -69,6 +69,8 @@ class AuthController extends GetxController {
             'isCheckedIn': false,
             'createdAt': FieldValue.serverTimestamp(),
             'role': 'staff',
+            'employeeId': 'N/A',
+            'position': 'N/A',
           });
           await _initializeNotifications(user.uid);
         } on FirebaseException catch (e) {
